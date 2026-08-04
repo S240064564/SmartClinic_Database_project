@@ -3,63 +3,98 @@ DROP DATABASE IF EXISTS SmartClinicDB;
 CREATE DATABASE SmartClinicDB;
 USE SmartClinicDB;
 
--- 1.Staff Table
+-- 1. Staff Table
 CREATE TABLE Staff (
-staff_id INT AUTO_INCREMENT PRIMARY KEY,
-first_name VARCHAR(50),
-last_name VARCHAR(50),
-role VARCHAR(30),
-phone VARCHAR(20),
-email VARCHAR(100)
+    staff_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    date_of_birth DATE,
+    role VARCHAR(30) NOT NULL,
+    phone VARCHAR(20) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    national_address VARCHAR(255)
 );
 
--- 2.Doctors Table 
+-- 2. Doctors Table
 CREATE TABLE Doctors (
-doctor_id INT PRIMARY KEY,
-specialization VARCHAR(100),
-license_number VARCHAR(50),
-FOREIGN KEY (doctor_id) REFERENCES Staff(staff_id)
+    doctor_id INT PRIMARY KEY,
+    specialization VARCHAR(100) NOT NULL,
+    license_number VARCHAR(50) UNIQUE NOT NULL,
+    FOREIGN KEY (doctor_id) REFERENCES Staff(staff_id) ON DELETE CASCADE
 );
 
--- 3.Patients Table 
+-- 3. Receptionists Table
+CREATE TABLE Receptionists (
+    receptionist_id INT PRIMARY KEY,
+    desk_number VARCHAR(10) NOT NULL,
+    shift_type VARCHAR(20) NOT NULL,
+    FOREIGN KEY (receptionist_id) REFERENCES Staff(staff_id) ON DELETE CASCADE
+);
+
+-- 4. Patients Table
 CREATE TABLE Patients (
-patient_id INT AUTO_INCREMENT PRIMARY KEY,
-first_name VARCHAR(50), 
-last_name VARCHAR(50),
-date_of_birth DATE,
-gender VARCHAR(10),
-phone VARCHAR(20),
-email VARCHAR(100)
+    patient_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL, 
+    last_name VARCHAR(50) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    gender VARCHAR(10),
+    phone VARCHAR(20) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    national_address VARCHAR(255)
 );
 
--- 4.Appointments Table
+-- 5. Appointments Table
 CREATE TABLE Appointments (
-appointment_id INT AUTO_INCREMENT PRIMARY KEY,
-patient_id INT,
-doctor_id INT,
-appointment_date DATE,
-appointment_time TIME,
-status VARCHAR(20),
-FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
-FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
+    appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    appointment_date DATE NOT NULL,
+    appointment_time TIME NOT NULL,
+    duration INT DEFAULT 30, -- In minutes
+    status VARCHAR(20) NOT NULL DEFAULT 'Scheduled',
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
 );
 
--- 5.Payment Table
+-- 6. Payments Table
 CREATE TABLE Payments (
-payment_id INT AUTO_INCREMENT PRIMARY KEY,
-patient_id INT,
-amount DECIMAL(10, 2),
-payment_date DATE,
-payment_method VARCHAR(20),
-FOREIGN KEY (patient_id) REFERENCES Patients(patient_id)
+    payment_id INT AUTO_INCREMENT PRIMARY KEY,
+    appointment_id INT UNIQUE NOT NULL,
+    patient_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_date DATE NOT NULL,
+    payment_method VARCHAR(20) NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id)
 );
 
--- 6.Treatments Table
+-- 7. Treatments Table
 CREATE TABLE Treatments (
-treatment_id INT AUTO_INCREMENT PRIMARY KEY,
-appointment_id INT NOT NULL,
-treatment_name VARCHAR(100) NOT NULL,
-treatment_cost DECIMAL(10, 2)NOT NULL,
-prescribed_medicine VARCHAR(150),
-FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id) ON DELETE CASCADE
+    treatment_id INT AUTO_INCREMENT PRIMARY KEY,
+    appointment_id INT NOT NULL UNIQUE,
+    treatment_name VARCHAR(100) NOT NULL,
+    treatment_cost DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id) ON DELETE CASCADE
 );
+
+-- 8. Medicine Table
+CREATE TABLE Medicine (
+    medicine_id INT AUTO_INCREMENT PRIMARY KEY,
+    medicine_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    stock_quantity INT NOT NULL DEFAULT 0
+);
+
+-- 9. Treatment_Medicine Table
+CREATE TABLE Treatment_Medicine (
+    treatment_id INT NOT NULL,
+    medicine_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    dosage VARCHAR(100),
+    instructions VARCHAR(255),
+    PRIMARY KEY (treatment_id, medicine_id),
+    FOREIGN KEY (treatment_id) REFERENCES Treatments(treatment_id) ON DELETE CASCADE,
+    FOREIGN KEY (medicine_id) REFERENCES Medicine(medicine_id) ON DELETE CASCADE
+);
+

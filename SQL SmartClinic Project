@@ -8,8 +8,8 @@ CREATE TABLE Staff (
     staff_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    date_of_birth DATE,
     role VARCHAR(30) NOT NULL,
+    date_of_birth DATE,
     phone VARCHAR(20) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     national_address VARCHAR(255)
@@ -97,4 +97,3 @@ CREATE TABLE Treatment_Medicine (
     FOREIGN KEY (treatment_id) REFERENCES Treatments(treatment_id) ON DELETE CASCADE,
     FOREIGN KEY (medicine_id) REFERENCES Medicine(medicine_id) ON DELETE CASCADE
 );
-

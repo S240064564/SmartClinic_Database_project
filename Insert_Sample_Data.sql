@@ -1,6 +1,6 @@
 -- Insert Data into Staff
-INSERT INTO Staff (first_name, last_name, role, phone, email) VALUES
-('Ahmed', 'Almansour', 'Doctor', '0501234567','ahmed@clinic.com'),
+ INSERT INTO Staff (first_name, last_name, role, phone, email) VALUES
+ ('Ahmed', 'Almansour', 'Doctor', '0501234567', 'ahmed@clinic.com'),
 ('Sarah', 'Alotaibi', 'Doctor', '0507654321', 'sarah@clinic.com'),
 ('Noura', 'Alsudairy', 'Receptionist', '0500001122', 'noura@clinic.com'),
 ('Khalid', 'Alenazi', 'Doctor', '0509998877', 'khalid.e@clinic.com'),
@@ -33,7 +33,7 @@ INSERT INTO Patients (first_name, last_name, date_of_birth, gender, phone, email
 ('Maha', 'Alghamdi', '1995-10-22', 'Female', '0544443322', 'maha@mail.com'),
 ('Fahad', 'Aldossari', '1988-01-15', 'Male', '0533332211', 'fahad@mail.com'),
 ('Rayan', 'Almutairi', '2000-08-30', 'Female', '0566667788', 'rayan@mail.com'),
-('Aisha', 'Algahtani', '1993-04-05', 'female', '0577778899', 'aisha@mail.com');
+('Aisha', 'Algahtani', '1993-04-05', 'Female', '0577778899', 'aisha@mail.com');
 
 -- Insert Data into Appointments
 INSERT INTO Appointments (patient_id, doctor_id, appointment_date, appointment_time, status) VALUES
